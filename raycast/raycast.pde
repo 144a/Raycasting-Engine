@@ -25,7 +25,14 @@ int[][] worldMap = {
   { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } 
 };
 
+// Booleans for Key presses
+  boolean isForward = false;
+  boolean isBackward = false;
+  boolean isRight = false;
+  boolean isLeft = false;
 
+
+// Data for Initial Raycast Calculations
 double posX = 22.0; 
 double posY = 12.0;
 double dirX = -1.0; 
@@ -180,40 +187,75 @@ public void draw()
 
   float moveSpeed = (float)frameTime * 5.0;
   float rotSpeed = (float)frameTime * 3.0;
-  if (keyPressed) {
-    if (keyCode == 38) {
-      if (worldMap[((int)(posX + dirX * moveSpeed))][((int)posY)] == 0) { 
-        posX += dirX * moveSpeed; 
-      }
-      if (worldMap[((int)posX)][((int)(posY + dirY * moveSpeed))] == 0) { 
-        posY += dirY * moveSpeed; 
-      }
+  
+  // Move Forward
+  if (isForward) {
+    if (worldMap[((int)(posX + dirX * moveSpeed))][((int)posY)] == 0) { 
+      posX += dirX * moveSpeed; 
     }
-    if (keyCode == 40) {
-      if (worldMap[((int)(posX - dirX * moveSpeed))][((int)posY)] == 0) {
-        posX -= dirX * moveSpeed;
-      }
-      if (worldMap[((int)posX)][((int)(posY - dirY * moveSpeed))] == 0) { 
-        posY -= dirY * moveSpeed;
-      }
-    }
-    if (keyCode == 39) {
-      double oldDirX = dirX;
-      dirX = (dirX * cos(-rotSpeed) - dirY * sin(-rotSpeed));
-      dirY = (oldDirX * sin(-rotSpeed) + dirY * cos(-rotSpeed));
-      double oldPlaneX = planeX;
-      planeX = (planeX * cos(-rotSpeed) - planeY * sin(-rotSpeed));
-      planeY = (oldPlaneX * sin(-rotSpeed) + planeY * cos(-rotSpeed));
-    }
-    
-    if (keyCode == 37) {
-      double oldDirX = dirX;
-      dirX = (dirX * cos(rotSpeed) - dirY * sin(rotSpeed));
-      dirY = (oldDirX * sin(rotSpeed) + dirY * cos(rotSpeed));
-      double oldPlaneX = planeX;
-      planeX = (planeX * cos(rotSpeed) - planeY * sin(rotSpeed));
-      planeY = (oldPlaneX * sin(rotSpeed) + planeY * cos(rotSpeed));
+    if (worldMap[((int)posX)][((int)(posY + dirY * moveSpeed))] == 0) { 
+      posY += dirY * moveSpeed; 
     }
   }
+  
+  // Move Backward
+  if (isBackward) {
+    if (worldMap[((int)(posX - dirX * moveSpeed))][((int)posY)] == 0) {
+      posX -= dirX * moveSpeed;
+    }
+    if (worldMap[((int)posX)][((int)(posY - dirY * moveSpeed))] == 0) { 
+      posY -= dirY * moveSpeed;
+    }
+  }
+  
+  // Turn Right
+  if (isRight) {
+    double oldDirX = dirX;
+    dirX = (dirX * cos(-rotSpeed) - dirY * sin(-rotSpeed));
+    dirY = (oldDirX * sin(-rotSpeed) + dirY * cos(-rotSpeed));
+    double oldPlaneX = planeX;
+    planeX = (planeX * cos(-rotSpeed) - planeY * sin(-rotSpeed));
+    planeY = (oldPlaneX * sin(-rotSpeed) + planeY * cos(-rotSpeed));
+  }
+  
+  // Turn Left
+  if (isLeft) {
+    double oldDirX = dirX;
+    dirX = (dirX * cos(rotSpeed) - dirY * sin(rotSpeed));
+    dirY = (oldDirX * sin(rotSpeed) + dirY * cos(rotSpeed));
+    double oldPlaneX = planeX;
+    planeX = (planeX * cos(rotSpeed) - planeY * sin(rotSpeed));
+    planeY = (oldPlaneX * sin(rotSpeed) + planeY * cos(rotSpeed));
+  }
+
+}
+
+void keyPressed() {
+  setMove(keyCode, true);
+}
+
+void keyReleased() {
+  setMove(keyCode, false);
+}
+
+void setMove(int k, boolean b) {
+  println(k);
+  switch(k) {
+    case 38:
+            isForward = b;
+            break;
+    case 40:
+            isBackward = b;
+            break;
+    case 39:
+            isRight = b;
+            break;
+    case 37:
+            isLeft = b;
+            break;
+    default:
+            break;
+  }
+  
 }
  
